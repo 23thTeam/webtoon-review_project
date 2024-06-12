@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="kor">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="웹툰어스" />
+    <meta property="og:description" content="재미있게 본 웹툰을 리뷰해요!" />
+    <meta
+      property="og:image"
+      content="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/music_festival.jpg"
+    />
+    <title>{{data.webtoon_detail.title}} | 웹툰어스</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <style>
+      @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+      .logo {
+        width: 80px;
+        height: 80px;
+      }
+      .background-banner {
+        background-image: linear-gradient(
+            45deg,
+            rgb(51 43 43 / 75%),
+            rgb(20 19 20 / 61%)
+          ),
+          url("https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+        max-height: 100%;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: col;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .webtoon-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 3rem 3rem 0 3rem;
+      }
+
+      .card-box {
+        opacity: 0.8;
+      }
+
+      .review {
+        padding: 3rem;
+      }
+
+      #card-hover:hover {
+        cursor: pointer;
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.2
+        ); /* 마우스 오버 시 배경색 밝은 회색 */
+        transition: background-color 0.2s linear; /* 배경색 전환 애니메이션 */
+      }
+    </style>
+  </head>
+
+  <body data-bs-theme="dark">
+    <!--background-banner-->
+    <div class="background-banner">
+      <!--Nav bar-->
+      <nav
+        class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between"
+        data-bs-theme="dark"
+      >
+        <div class="ms-3">
+          <a class="link-body-emphasis" href="/">
+            <img class="logo" src="{{ url_for('static', filename='image/logo.png') }}" alt="logo"
+          /></a>
+        </div>
+        <nav class="navbar navbar-expand-lg">
+          <div class="container-fluid">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{{ url_for('home') }}"
+                    >Home</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{{ url_for('music') }}"
+                    >Music</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{{ url_for('album') }}"
+                    >Cart</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    aria-current="page"
+                    href="{{ url_for('webtoon') }}"
+                    >Webtoon</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </nav>
+      <!--Nav bar-->
+
+      <!--Main-->
+      <main>
+        <div class="main px-4 py-5 my-5">
+          <!--Card-->
+          {% if data.webtoon_detail %}
+          <div class="card card-box" style="max-width: 70vw">
+            <div class="row g-0">
+              <div class="col-md-5">
+                <img
+                  src="{{ data.webtoon_detail.img }}"
+                  class="img-fluid rounded-start"
+                  alt="웹툰 이미지"
+                  style="width: 100%; object-fit: cover"
+                />
+              </div>
+              <div class="col-md-7">
+                <div class="webtoon-info">
+                  <button
+                    type="button"
+                    class="btn btn-success mb-4"
+                    style="font-weight: 600; max-width: 300px; width: 130px"
+                  >
+                    네이버
+                    <span
+                      class="badge text-bg-dark ms-1"
+                      id="updateDay"
+                      data-update-day="{{data.webtoon_detail.updateDays[0]}}"
+                    ></span>
+                  </button>
+                  <h2 class="card-title">{{ data.webtoon_detail.title }}</h2>
+                  <h5 class="card-title text-body-secondary">
+                    {{ data.webtoon_detail.author }}
+                  </h5>
+                  <p class="card-text">
+                    <small class="text-body-secondary"
+                      >관심 {{data.webtoon_detail.fanCount}}만 </small
+                    ><small class="text-warning">+</small>
+                  </p>
+                  <p class="card-text">
+                    <a href="{{ data.webtoon_detail.url }}">
+                      <button type="button" class="btn btn-secondary">
+                        보러가기
+                      </button></a
+                    >
+                  </p>
+                </div>
+              </div>
+              <!--User Review-->
+              <div class="review">
+                <hr />
+                <br />
+                <h2 class="mb-3">사용자 리뷰</h2>
+                <br />
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                  <!---->
+                  {% if data.webtoon_review_list %} {% for review in
+                  data.webtoon_review_list %}
+                  <div class="review-box col">
+                    <div id="card-hover" class="card h-100">
+                      <div class="card-body">
+                        <p class="card-text">
+                          <small class="text-body-secondary"
+                            >{{ review.username }}</small
+                          >
+                        </p>
+                        <h5 class="card-title">{{ review.title }}</h5>
+                        <p class="card-text">{{ review.text }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %} {% else %}
+                  <p>
+                    사용자 리뷰가 없습니다. 이 웹툰의 첫 리뷰를 작성해 보세요!
+                  </p>
+                  {% endif %}
+                  <!---->
+                </div>
+              </div>
+              <!--User Review-->
+            </div>
+          </div>
+          {% else %}
+          <div style="height: 65vh;">
+          <p class="mt-5">찾는 웹툰이 없습니다.</p>
+          {% endif %}
+          <!--Card-->
+        </div>
+      </main>
+      <!--Main-->
+    </div>
+    <!--background-banner-->
+
+    <!--Footer-->
+    <div class="container">
+      <footer>
+        <div
+          class="d-flex flex-column flex-sm-row justify-content-between pt-2 mt-4 border-top"
+        >
+          <small>© Innovationcamp, Team 23rd - Mini Project with Flask</small>
+          <ul class="list-unstyled d-flex">
+            <li class="ms-3">
+              <a
+                class="link-body-emphasis"
+                href="https://github.com/23thTeam/webtoon-review_project"
+              >
+                <i class="bi bi-github"></i>
+              </a>
+            </li>
+            <li class="ms-3">
+              <a
+                class="link-body-emphasis"
+                href="https://noeulfront.notion.site/23-S-A-057d5d3087cb44e08bad121bcf9d763a"
+                ><i class="bi bi-postcard"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+    <script>
+      function getDayKorean(updateDays) {
+        // detail.updateDays[0]
+        let result = "";
+        switch (updateDays) {
+          case "mon":
+            result = "월요일";
+            break;
+          case "tue":
+            result = "화요일";
+            break;
+          case "wed":
+            result = "수요일";
+            break;
+          case "thu":
+            result = "목요일";
+            break;
+          case "fri":
+            result = "금요일";
+            break;
+          case "sat":
+            result = "토요일";
+            break;
+          case "sun":
+            result = "일요일";
+            break;
+          case "finished":
+            result = "완결";
+            break;
+          case "naverDaily":
+            result = "매일+";
+            break;
+        }
+        return result;
+      }
+
+      document.addEventListener("DOMContentLoaded", (event) => {
+        const updateDaySpan = document.getElementById("updateDay");
+        const updateDay = updateDaySpan.getAttribute("data-update-day");
+        const koreanDay = getDayKorean(updateDay);
+        updateDaySpan.textContent = koreanDay;
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
