@@ -44,7 +44,7 @@
                                 <a class="nav-link text-white" aria-current="page" href="">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="{{url_for('user_review')}}">유저별 웹툰리뷰</a>
+                                <a class="nav-link text-white" href="#">유저별 웹툰리뷰</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="#">웹툰별 리뷰</a>
@@ -91,13 +91,13 @@
                         <div id="emailHelp" class="form-text">제목을 입력해주세요.</div>
                     </div>
                     <div>
-                        <input type="text" class="form-control" id="exampleInputEmail1"
+                        <input type="hidden" class="form-control" id="exampleInputEmail1"
                             aria-describedby="emailHelp" name="username" required>
                         <div id="emailHelp" class="form-text">사용자(작성자)의 이름을 넣어주세요.</div>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="webtoon_id">웹툰 id</label>
-                        <input type="text" class="form-control" id="exampleInputPassword1" name="webtoon_id" required>
+                        <input type="hidden" class="form-control" id="exampleInputPassword1" name="webtoon_id" required>
                         <div id="emailHelp" class="form-text">웹툰의 id를 입력해주세요.</div>
                     </div>
                     <div class="mb-3">

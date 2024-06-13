@@ -19,15 +19,17 @@ class Webtoon(db.Model):
 
     username = webtoon_id = db.Column(db.Integer, nullable=False)
     webtoon_id = db.Column(db.Integer, nullable=False)
-    contents = db.Column(db.String, nullable=False)
+    webtoon_review = db.Column(db.String, nullable=True)
 
-    title = db.Column(db.String, nullable=False)
-    author = db.Column(db.String, nullable=False)
-    url = db.Column(db.String, nullable=False)
-    img = db.Column(db.String, nullable=False)
-    service = db.Column(db.String, nullable=False)
+    title = db.Column(db.String, nullable=True)
+    author = db.Column(db.String, nullable=True)
+    url = db.Column(db.String, nullable=True)
+    img = db.Column(db.String, nullable=True)
+    service = db.Column(db.String, nullable=True)
 
-    updateDays = db.Column(db.String, nullable=False)
+    fanCount = db.Column(db.String, nullable=True)
+    searchKeyword =  db.Column(db.String, nullable=True) 
+    updateDays = db.Column(db.String, nullable=True)
 
     def __repr__(self):
         return f'{self.artist} {self.title} 추천 by {self.username}'
@@ -38,18 +40,44 @@ with app.app_context():
 @app.route('/')
 def home():
 
+    res = requests.get(
+	"https://korea-webtoon-api.herokuapp.com/?perPage=20"
+    )
+    rjson = res.json()
+    webtoon_list = rjson["webtoons"]
+
+    for webtoon in webtoon_list:
+
+        username_receive = ""
+        webtoon_review_receive = ""
+
+        webtoon_id_receive = webtoon['webtoonId']   
+        title_receive = webtoon['title']
+        author_receive = webtoon['author']
+        url_receive = webtoon['url']
+        img_receive = webtoon['img']
+        service_receive = webtoon['service']
+        fanCount_receive = webtoon['fanCount']
+        searchKeyword_receive = webtoon['searchKeyword']
+
+        updateDays_receive = webtoon['updateDays'][0]
+
+        web = Webtoon(webtoon_id=webtoon_id_receive,
+                      username = username_receive,
+                      webtoon_review = webtoon_review_receive,
+                      title=title_receive,
+                      author=author_receive,
+                      url=url_receive,
+                      img=img_receive,
+                      service=service_receive,
+                      fanCount=fanCount_receive,
+                      searchKeyword=searchKeyword_receive,
+                      updateDays=updateDays_receive)
+        db.session.add(web)
+        db.session.commit()
+
     web_list = Webtoon.query.all()
     return render_template('home.html', data=web_list)
-
-@app.route("/user_review/")
-def user_review():
-    webtoon_list = Webtoon.query.all()
-    return render_template('user_review.html', data=webtoon_list)
-
-@app.route("/user_review/<username>/")
-def render_user_review_filter(username):
-    filter_list = Webtoon.query.filter_by(webtoon_id=username).all()
-    return render_template('user_review.html', data=filter_list)
 
 @app.route("/webtoon/delete/")
 def webtoon_delete():
