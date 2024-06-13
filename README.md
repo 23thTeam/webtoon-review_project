@@ -1,4 +1,4 @@
-![webtoonus_big](https://github.com/23thTeam/webtoon-review_project/assets/58466648/7f83ce0a-74c8-4efb-a4f5-b63180aaa6be)
+![webtoonus_big](https://github.com/23thTeam/webtoon-review_project/assets/58466648/a650cd4f-78c0-4fc7-acf1-381b9e934dff)
 
 ![logo](https://github.com/23thTeam/webtoon-review_project/assets/58466648/c16125f2-6d88-4c35-bc87-e6e80165c8e3)
 
