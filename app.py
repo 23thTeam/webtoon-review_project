@@ -85,6 +85,7 @@ def webtoonDetail(webtoon_id):
     webtoon_review_list.append(review1)
     webtoon_review_list.append(review1)
 
+
     # 리뷰 데이터: webtoon_id 필터해서 가져오기
     # Review.query.filter_by(webtoonId=int(webtoon_id)).all()
 
@@ -134,6 +135,19 @@ def webtoonCreate():
     db.session.commit()
 
     return redirect(url_for("render_user_filter",username=webtoon_username_receive))
+
+@app.route("/webtoon/delete/")
+def webtoon_delete():
+
+    id_receive = request.args.get("id")
+
+    data = db.session.get(Webtoon, id_receive)
+    db.session.delete(data)
+    db.session.commit()
+
+    webtoon_list = Webtoon.query.all()
+    return render_template('user.html', data=webtoon_list)
+
 
 if __name__ == "__main__":
     app.run(debug=True , port=5000)

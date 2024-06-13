@@ -113,6 +113,11 @@
                                 <p>{{d.webtoon_review}}</p>
                                 <!-- <button type="button" class="btn btn-primary">수정하기</button> -->
                             </div>
+
+                            <form action="{{url_for('webtoon_delete')}}" method="GET">
+                                <p><input type="hidden" name="id" value="{{d.id}}"></p>
+                                <button type="submit" class="btn btn-primary">삭제하기</button>
+                            </form> 
                         </div>
                       </div>
                   </div>

@@ -213,9 +213,15 @@
                         </p>
                         <h5 class="card-title">{{ review.title }}</h5>
                         <p class="card-text">{{ review.text }}</p>
+                    <form action="{{url_for('webtoon_delete')}}" method="GET">
+                    <p><input type="hidden" name="id" value="{{review.id}}"></p>
+                    <button type="submit" class="btn btn-primary">삭제하기</button>
+                    </form>
                       </div>
                     </div>
+                    
                   </div>
+                 
                   {% endfor %} {% else %}
                   <p>
                     사용자 리뷰가 없습니다. 이 웹툰의 첫 리뷰를 작성해 보세요!
