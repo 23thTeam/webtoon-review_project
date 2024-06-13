@@ -1,10 +1,165 @@
-<!DOCTYPE html>
+<!Doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <style>
+
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+        
+        .background-banner {
+            background-image: linear-gradient(45deg,
+                    rgb(51 43 43 / 75%),
+                    rgb(20 19 20 / 61%)), url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKuN2Filb31riRZMbbrrVX8q7pz3fpZeyuYg&s");
+            max-height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
 </head>
-<body>
+
+<body data-bs-theme="dark">
+    <div class="background-banner">
+        <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="dark">
+            <div class="ms-3">
+                <img style="height:100px" src="data:image/jpeg;base64,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" alt="">
+            </div>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" aria-current="page" href="">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{url_for('user_review')}}">유저별 웹툰리뷰</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="#">웹툰별 리뷰</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white">Movie</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </nav>
+
+
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold text-body-emphasis">웹툰 리뷰</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            <br>
+            나만의 리뷰를 적어보세요!
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                리뷰 등록
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">리뷰 작성</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('webtoon_create')}} "method="GET">
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp" name="title" required>
+                        <div id="emailHelp" class="form-text">제목을 입력해주세요.</div>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp" name="username" required>
+                        <div id="emailHelp" class="form-text">사용자(작성자)의 이름을 넣어주세요.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="webtoon_id">웹툰 id</label>
+                        <input type="text" class="form-control" id="exampleInputPassword1" name="webtoon_id" required>
+                        <div id="emailHelp" class="form-text">웹툰의 id를 입력해주세요.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">내용을 입력해주세요.</label>
+                        <input type="textarea" class="form-control" id="exampleInputPassword1" name="contents">
+                        <div id="emailHelp" class="form-text" required>게시글의 내용을 입력해주세요.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5">
+    {% for webtoon in data %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{webtoon.img}}"
+                class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{webtoon.title}}</h5>
+                <p class="card-text">{{webtoon.webtoon_id}}</p>
+                <p class="card-text">{{webtoon.username}}</p>
+                <p class="card-text">{{webtoon.author}}</p>
+                <p class="card-text">
+                    <a href="{{webtoon.url}}">
+                        {{webtoon.url}}
+                      </a>
+                </p>
+                <p class="card-text">{{webtoon.service}}</p>
+                <p class="card-text">{{webtoon.updateDays}}</p>
+                <p class="card-text">{{webtoon.contents}}</p>
+                <form action="{{url_for('webtoon_delete')}}" method="GET">
+                    <p><input type="hidden" name="id" value="{{webtoon.id}}"></p>
+                    <button type="submit" class="btn btn-primary">삭제하기</button>
+                </form>                    
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+
+</div>
+</div>
+
+<div class="container">
+    <footer>
+      <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+        <p>© 2023 Company, Inc. All rights reserved.</p>
+        <ul class="list-unstyled d-flex">
+          <li class="ms-3"><a class="link-body-emphasis" href="https://www.youtube.com/@SpartaCodingClub"><i class="bi bi-youtube"></i></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="https://www.instagram.com/spartacodingclub/"><i class="bi bi-instagram"></i></a></li>
+          <li class="ms-3"><a class="link-body-emphasis" href="https://spartacodingclub.kr/blog"><i class="bi bi-postcard"></i></a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
