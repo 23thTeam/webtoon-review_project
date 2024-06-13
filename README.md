@@ -1,4 +1,5 @@
-![webtoonus_big_img](https://github.com/23thTeam/webtoon-review_project/assets/58466648/9c573449-a848-4bec-93af-e27fa71c49d4)
+![webtoonus_big](https://github.com/23thTeam/webtoon-review_project/assets/58466648/7f83ce0a-74c8-4efb-a4f5-b63180aaa6be)
+
 ![logo](https://github.com/23thTeam/webtoon-review_project/assets/58466648/c16125f2-6d88-4c35-bc87-e6e80165c8e3)
 
 # 웹툰어스 (Webtoon us)
