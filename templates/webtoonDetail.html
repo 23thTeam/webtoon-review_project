@@ -109,24 +109,24 @@
                   <a
                     class="nav-link active"
                     aria-current="page"
-                    href="{{ url_for('home') }}"
-                    >Home</a
+                    href="/"
+                    >홈</a
                   >
                 </li>
                 <li class="nav-item">
                   <a
                     class="nav-link active"
                     aria-current="page"
-                    href="#"
-                    >메뉴2</a
+                    href="/webtoon"
+                    >웹툰별 리뷰</a
                   >
                 </li>
                 <li class="nav-item">
                   <a
                     class="nav-link active"
                     aria-current="page"
-                    href="#"
-                    >메뉴3</a
+                    href="/user"
+                    >유저별 리뷰</a
                   >
                 </li>
               </ul>
@@ -187,7 +187,17 @@
               <div class="review">
                 <hr />
                 <br />
-                <h2 class="mb-3">사용자 리뷰</h2>
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
+                <h2>사용자 리뷰</h2>
+              <button
+              type="button"
+              class="btn btn-success m-3"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              리뷰 쓰기
+            </button>
+                </div>
                 <br />
                 <div class="row row-cols-1 row-cols-md-2 g-4">
                   <!---->
@@ -225,6 +235,167 @@
         </div>
       </main>
       <!--Main-->
+       <!-- Modal -->
+       <div
+       class="modal fade"
+       id="exampleModal"
+       tabindex="-1"
+       aria-labelledby="exampleModalLabel"
+       aria-hidden="true"
+     >
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h1 class="modal-title fs-5" id="exampleModalLabel">리뷰 작성</h1>
+             <button
+               type="button"
+               class="btn-close"
+               data-bs-dismiss="modal"
+               aria-label="Close"
+             ></button>
+           </div>
+           <div class="modal-body">
+             <!--modal body-->
+             <!--form으로 사용자 입력한 데이터 서버로 보내기-->
+             <form action="{{ url_for('home') }}" method="POST">
+               <!---->
+               <div class="mb-3">
+                <label for="webtoon-title-input" class="form-label">웹툰 제목</label>
+                <input
+                  type="text"
+                  readonly
+                  class="form-control"
+                  id="webtoon-title-input"
+                  name="webtoon-title"
+                  value="{{ data.webtoon_detail.title }}"
+                />
+              </div>
+              <!---->
+               <div class="mb-3">
+                 <label for="review-input" class="form-label">리뷰</label>
+                 <input
+                   type="text"
+                   class="form-control"
+                   id="review-input"
+                   name="review"
+                 />
+                 <div id="review" class="form-text">
+                  리뷰를 작성해주세요.
+                </div>
+               </div>
+               <!---->
+               <div class="mb-3">
+                <label for="username-input" class="form-label">유저 이름</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username-input"
+                  name="username"
+                />
+                <div id="username" class="form-text">
+                  등록하시는 사용자 이름을 넣어주세요.
+                </div>
+              </div>
+               <!---->
+               <div style="display:none">
+                <div class="mb-3">
+                  <label for="webtoon-id-input" class="form-label">웹툰 ID</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-id-input"
+                    name="webtoon-id"
+                    value="{{ data.webtoon_detail.webtoonId }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-author-input" class="form-label">웹툰 작가</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-author-input"
+                    name="webtoon-author"
+                    value="{{ data.webtoon_detail.author }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-url-input" class="form-label">웹툰 url</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-url-input"
+                    name="webtoon-url"
+                    value="{{ data.webtoon_detail.url }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-img-input" class="form-label">웹툰 이미지</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-img-input"
+                    name="webtoon-img"
+                    value="{{ data.webtoon_detail.img }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-service-input" class="form-label">웹툰 연재처</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-service-input"
+                    name="webtoon-service"
+                    value="{{ data.webtoon_detail.service }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-fanCount-input" class="form-label">웹툰 관심+</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-fanCount-input"
+                    name="webtoon-fanCount"
+                    value="{{ data.webtoon_detail.fanCount }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-searchKeyword-input" class="form-label">웹툰 서치 키워드</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-searchKeyword-input"
+                    name="webtoon-searchKeyword"
+                    value="{{ data.webtoon_detail.searchKeyword }}"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="webtoon-updateDays-input" class="form-label">웹툰 연재일</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-updateDays-input"
+                    name="webtoon-updateDays"
+                    value="{{ data.webtoon_detail.updateDays[0] }}"
+                  />
+                </div>
+               </div>
+               <!---->
+               <button type="submit" class="btn btn-success">작성 완료</button>
+             </form>
+             <!--modal body-->
+           </div>
+         </div>
+       </div>
+     </div>
+     <!-- Modal -->
     </div>
     <!--background-banner-->
 

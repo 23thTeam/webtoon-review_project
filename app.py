@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, url_for, redirect
 import requests
-import os
-from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# DB
+import os
+from flask_sqlalchemy import SQLAlchemy
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =\
@@ -13,31 +13,46 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 
 db = SQLAlchemy(app)
 
-# class Review(db.Model)
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(100), nullable=False)
-#     webtoonId =  db.Column(db.Integer, nullable=False)
-#     title = db.Column(db.String(100), nullable=False)
-#     text = db.Column(db.String(1000), nullable=False)
+class Webtoon(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = webtoon_id = db.Column(db.String, nullable=False)
+    webtoon_review = db.Column(db.String, nullable=True)
+    webtoon_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String, nullable=True)
+    author = db.Column(db.String, nullable=True)
+    url = db.Column(db.String, nullable=True)
+    img = db.Column(db.String, nullable=True)
+    service = db.Column(db.String, nullable=True)
+    fanCount = db.Column(db.String, nullable=True)
+    searchKeyword =  db.Column(db.String, nullable=True) 
+    updateDays = db.Column(db.String, nullable=True)
 
-#     def __repr__(self):
-#         return f'{self.title} {self.text} 추천 by {self.username}'
+    def __repr__(self):
+        return f'{self.title} {self.author} 추천 by {self.username}'
 
 with app.app_context():
     db.create_all()
 
 
-# 테스트 용으로 작성
 
-# @app.route("/")
-# def home():
-#     api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=20&service=naver"
-#     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-#     response = requests.get(api_url, headers=headers)
-#     webtoons = response.json()["webtoons"]
+@app.route('/') # 홈으로 설정
+def home():
+    return render_template("home.html")
 
-#     return render_template("home.html", data=webtoons)
 
+@app.route("/webtoon/")
+def webtoon():
+    naver_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=20&service=naver"
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
+
+    def getWebtoonData(api_url):
+        response = requests.get(api_url, headers=headers)
+        return response.json()["webtoons"]
+
+    context = {
+        "naver": getWebtoonData(naver_api_url),
+    }    
+    return render_template("webtoon.html", data=context)
 
 
 @app.route("/webtoon/<webtoon_id>")
@@ -74,6 +89,7 @@ def webtoonDetail(webtoon_id):
         "webtoon_detail": webtoon_detail,
         "webtoon_review_list": webtoon_review_list,
     }
+    
     return render_template("webtoonDetail.html", data=data)
 
 
