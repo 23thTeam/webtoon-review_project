@@ -116,6 +116,7 @@
 
       <!--Main-->
       <main>
+        <ul></ul>
         <div
           class="d-flex flex-column justify-content-center px-4 py-5 my-5 text-center"
         >
@@ -125,7 +126,7 @@
           >
             <h1 class="fw-bold text-body-emphasis w-100">웹툰 검색</h1>
             <form
-              action="{{ url_for('webtoon') }}"
+              action="/webtoon"
               method="POST"
               class="d-flex flex-row w-100 search rounded search-bar"
             >
@@ -146,44 +147,23 @@
           <div
             class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5 main-card rounded"
           >
-            {% for data in data.naver %}
+            {% for webtoon in data %}
             <a
               class="button-link"
-              href="{{ url_for('webtoonDetail', webtoon_id=data.webtoonId) }}"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
             >
-              <div class="col webtoon-item" id="{{data.webtoonId}}">
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
                 <div class="card h-100">
                   <img
-                    src="{{ data.img }}"
+                    src="{{ webtoon.img }}"
                     class="card-img-top"
                     alt="album cover image"
                   />
                   <div class="card-body">
-                    <h5 class="card-title">{{ data.title }}</h5>
-                    <p class="card-text">{{ data.author }}</p>
-                    <p class="card-text">{{ data.service }}</p>
-                    <p class="card-text">{{ data.updateDays[0] }}</p>
-                  </div>
-                </div>
-              </div></a
-            >
-            {% endfor %} {% for data in data.kakao %}
-            <a
-              class="button-link"
-              href="{{ url_for('webtoonDetail', webtoon_id=data.webtoonId) }}"
-            >
-              <div class="col webtoon-item" id="{{data.webtoonId}}">
-                <div class="card h-100">
-                  <img
-                    src="{{ data.img }}"
-                    class="card-img-top"
-                    alt="album cover image"
-                  />
-                  <div class="card-body">
-                    <h5 class="card-title">{{ data.title }}</h5>
-                    <p class="card-text">{{ data.author }}</p>
-                    <p class="card-text">{{ data.service }}</p>
-                    <p class="card-text">{{ data.updateDays[0] }}</p>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
+                    <p class="card-text">{{ webtoon.service }}</p>
+                    <p class="card-text">{{ webtoon.update_days }}</p>
                   </div>
                 </div>
               </div></a

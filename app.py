@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, jsonify
 import requests
 
 import os
@@ -16,13 +16,20 @@ class Review(db.Model):
     username = db.Column(db.String, nullable=False)
     review = db.Column(db.String, nullable=False)
     webtoon_id = db.Column(db.Integer, nullable=False)
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "review": self.review,
+            "webtoon_id": self.webtoon_id,
+        }
 
     # ✅ 같은 유저가 동일한 웹툰에 대해 중복된 리뷰를 작성하는 것을 방지
     # __table_args__ = (db.UniqueConstraint('username', 'webtoon_id', name='unique_user_webtoon_review'),)
 
-    # 디비 확인 위해 디버깅/로그 기록
-    def __repr__(self):
-        return f'review by {self.username} for webtoon_id: {self.webtoon_id}'
+    # # 디비 확인 위해 디버깅/로그 기록
+    # def __repr__(self):
+    #     return f'review by {self.username} for webtoon_id: {self.webtoon_id}'
     
 class Webtoon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,9 +43,20 @@ class Webtoon(db.Model):
     fan_count = db.Column(db.Integer, nullable=True) # 없는 것도 있음
     search_keyword =  db.Column(db.String, nullable=False) 
 
-    def __repr__(self):
-        return f'Webtoon: {self.title}'
-
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "webtoon_id": self.webtoon_id,
+            "title": self.title,
+            "author": self.author,
+            "url": self.url,
+            "img": self.img,
+            "service": self.service,
+            "update_days": self.update_days,
+            "fan_count": self.fan_count,
+            "search_keyword": self.search_keyword
+        }
+    
 # ✅ 서버 시작 전 이미 생성해 뒀기 때문에 빼도 될거 같음
 # ✅ 프로덕션 환경에선 빼도 된다고 하는데 확인 필요
 # with app.app_context():
@@ -59,31 +77,24 @@ def render_user_filter(username):
     filter_list = Review.query.filter_by(username=username).all()
     return render_template('user.html', data=filter_list)
 
-@app.route("/webtoon/", methods=['GET', 'POST'])
+
+@app.route("/webtoon", methods=['GET', 'POST'])
 def webtoon():
-    # 웹툰 API 받아오기
-    # naver_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=20&service=naver"
-    naver_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=50&service=naver"
-    kakao_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=50&service=kakao"
-
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-
-    def getWebtoonData(api_url):
-        response = requests.get(api_url, headers=headers)
-        return response.json()["webtoons"]
-
-    context = {
-        "naver": getWebtoonData(naver_api_url),
-        "kakao": getWebtoonData(kakao_api_url),
-    }
+    # context = {
+    #     "naver": get_by_service_webtoon_db(service="naver"),
+    #     "kakao": get_by_service_webtoon_db(service="kakao"),
+    #     "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
+    # }
     
-    # 검색 시 GET 사용할 경우 혼동 생기므로 
-    # POST 로 받아 서치로 리디렉션 먼저하기
+    kakao = db.session.query(Webtoon).filter_by(service="kakao").all()
+    webtoon_list = [webtoon.to_dict() for webtoon in kakao]
+    
+    # 검색 시 GET 사용할 경우 혼동 생기므로, POST 로 받아 서치로 리디렉션 먼저하기
     if request.method == 'POST':
         keyword = request.form.get('keyword')
         return redirect(url_for('search', keyword=keyword))
 
-    return render_template("webtoon.html", data=context)
+    return render_template("webtoon.html", data=webtoon_list)
 
 
 @app.route("/webtoon/search")
@@ -181,42 +192,11 @@ def webtoon_delete():
     webtoon_list = Review.query.all()
     return render_template('user.html', data=webtoon_list)
 
-
-# # 서버 시작 전 웹툰 api 받아와 DB에 저장하여 사용
-# # 이유: python anywhere 가 불분명한 api 접근 지원하지 않으므로 500 server error, proxy error 발생
-# def create_webtoon_db():
-#     webtoon_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=10000"
-#     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-#     response = requests.get(webtoon_api_url, headers=headers)
-#     data = response.json()["webtoons"]
-#     for item in data:
-#         print(item)
-#         webtoon = Webtoon(
-#             webtoon_id= item.get('webtoonId'),
-#             title= item.get('title'),
-#             author= item.get('author'),
-#             url= item.get('url'),
-#             img= item.get('img'),
-#             service= item.get('service'),
-#             update_days= item.get('updateDays')[0],
-#             fan_count= item.get('fanCount'),
-#             search_keyword= item.get('searchKeyword'),
-#         )
-#         db.session.add(webtoon)
-#     db.session.commit()
-
-
-# def initialize():
-#     with app.app_context():
-#         db.create_all()
-#         if not db.session.query(Webtoon).first():  # 데이터베이스가 비어 있는지 확인
-#             create_webtoon_db()
-#             print("🚀 Webtoon DB Setiing...")
-
-
 if __name__ == "__main__":
-    # initialize() # 서버 시작 시 초기화 작업을 수동으로 호출
     app.run(debug=True , port=5000)
+
+
+
 
 # data = [
 #     {
