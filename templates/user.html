@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>userpage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+        .wrapper {
+            margin: 10%;
+        }
+        .user-wrap {
+            height: 20vh;
+        }
+        .user-wrap > div {
+            font-size: 2rem;
+        }
+        .card-title {
+            font-size: 100%;
+        }
+        .webtoon_detail_wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        .webtoon_detail {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .web_title {
+            margin: 1rem 0;
+        }
+        .modal-text {
+            margin: 10%;
+            height: 80%;
+        }
+        #web-service {
+            background-color: rgb(251,232,19);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <form action="" method="GET">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">유저</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" name="username"
+                    aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">사용자(추천인)의 이름을 넣어주세요.</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">노래 제목</label>
+                <input type="text" class="form-control" id="exampleInputPassword1" name="title">
+                <div id="emailHelp" class="form-text">좋아하는 노래 제목을 넣어주세요.</div>
+            </div>
+            <button type="submit" class="btn btn-danger" method="delete">Submit</button>
+        </form>
+        <div class="user-wrap">
+            <div>user가 쓴 리뷰</div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for d in data %}
+            <div class="col">
+              <div class="card h-100">
+                <img src="{{d.img}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">{{d.title}}</h5>
+                  <p class="card-text">{{d.wentoon_review}}</p>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    상세 보기
+                </button>
+                </div>
+              </div>
+          </div>
+        
+
+    <!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 1200px;">
+          <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title">{{d.title}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container text-center">
+                    <div class="row">
+                        <div class="col">
+                            <div class="webtoon_detail_wrap">
+                                <img src="{{d.img}}" alt="..." style="width: 100%">
+                            </div>
+                      </div>
+                      <div class="col">
+                          <div class="webtoon_detail" style="margin: 10px; font-size: 1.25rem">
+                            <div class="web_title">
+                                <span style="font-weight: bold;
+                                background-color: #c3c3c3;
+                                border-radius: .25rem;
+                                padding: 5px 7px;
+                                color: #fff;">작가</span>
+                                <span>{{d.author}}</span>
+                            </div>
+                            <div id="web-service" class="web_service" style="
+                            border-radius: .25rem;
+                            padding: 5px 7px;">
+                               <a href="{{d.url}}" style="text-decoration: none; color: black;">{{d.service}}</a>
+                            </div>
+                          </div>
+                        <div class="modal-text" style="border-top: solid;
+                        border-width: .2rem; padding-top: 1rem; margin: 10% 10px 10px 10px">
+                            <div id="review-detial">
+                                <p>{{d.webtoon_review}}</p>
+                                <!-- <button type="button" class="btn btn-primary">수정하기</button> -->
+                            </div>
+
+                            <form action="{{url_for('webtoon_delete')}}" method="GET">
+                                <p><input type="hidden" name="id" value="{{d.id}}"></p>
+                                <button type="submit" class="btn btn-primary">삭제하기</button>
+                            </form> 
+                        </div>
+                      </div>
+                  </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous">
+    </script>
+    <script>
+        console.log(document.getElementById('web-service').innerText)
+        if(document.getElementById('web-service').innerText == 'naver'){
+            document.getElementById('web-service').style.backgroundColor = 'rgb(64,204,36)';
+        }else if(document.getElementById('web-service').innerText == 'kakao'){
+            document.getElementById('web-service').style.backgroundColor = 'rgb(251,232,19)'
+        }else if(document.getElementById('web-service').innerText == 'kakaoPage'){
+            document.getElementById('web-service').style.backgroundColor = 'rgb(189,71,71)'
+
+        };
+    </script>
+</body>
+</html>
