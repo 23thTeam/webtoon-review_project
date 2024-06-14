@@ -153,30 +153,64 @@
               </div>
               <div class="col-md-7">
                 <div class="webtoon-info">
+                  {% if data.webtoon_detail.service == "naver" %}
                   <button
                     type="button"
                     class="btn btn-success mb-4"
-                    style="font-weight: 600; max-width: 300px; width: 130px"
+                    style="font-weight: 600; max-width: 300px;"
                   >
-                  {% if data.webtoon_detail.service == "naver" %}
                   <span id="serviceName">네이버</span>
-                    {% else %}
-                    <span id="serviceName">카카오</span>
-                    {% endif %}
-                    <span
+                  <span
                       class="badge text-bg-dark ms-1"
                       id="updateDay"
                       data-update-day="{{data.webtoon_detail.update_days}}"
                     ></span>
                   </button>
+                  {% elif data.webtoon_detail.service == "kakao" %}
+                  <button
+                    type="button"
+                    class="btn btn-warning mb-4"
+                    style="font-weight: 600; max-width: 300px;"
+                  >
+                  <span id="serviceName">카카오</span>
+                  <span
+                      class="badge text-bg-dark ms-1"
+                      id="updateDay"
+                      data-update-day="{{data.webtoon_detail.update_days}}"
+                    ></span>
+                  </button>
+                    {% else %}
+                    <button
+                    type="button"
+                    class="btn btn-warning mb-4"
+                    style="font-weight: 600; max-width: 300px;"
+                  >
+                  <span id="serviceName">카카오 페이지</span>
+                  <span
+                      class="badge text-bg-dark ms-1"
+                      id="updateDay"
+                      data-update-day="{{data.webtoon_detail.update_days}}"
+                    ></span>
+                  </button>
+                    {% endif %}
+                    
                   <h2 class="card-title">{{ data.webtoon_detail.title }}</h2>
                   <h5 class="card-title text-body-secondary">
                     {{ data.webtoon_detail.author }}
                   </h5>
-                  <p class="card-text">
+                  <p class="card-text"><br/>
                     <small class="text-body-secondary"
-                      >관심 {{data.webtoon_detail.fan_count}}만 </small
-                    ><small class="text-warning">+</small>
+                      >
+                      {% if data.webtoon_detail.fan_count is not none %}
+                      관심 {{ data.webtoon_detail.fan_count }} 만<small class="text-warning">+</small>
+                      {% else %}
+                      관심 낮음<small class="text-warning">+</small>
+                      <br/><small>이 웹툰을 아직 안 보셨다면 정말 추천드려요.
+                        <br/>한번 확인해 보세요!</small
+                        >
+                      {% endif %}
+                      </small
+                    >
                   </p>
                   <p class="card-text">
                     <a href="{{ data.webtoon_detail.url }}">
@@ -382,11 +416,6 @@
         const koreanDay = getDayKorean(updateDay);
         updateDaySpan.textContent = koreanDay;
       });
-
-      const serviceSpan = document.getElementById("serviceName");
-      if (serviceSpan.innerText === "카카오") {
-        serviceSpan.parentNode.classList.add("btn-warning")
-      }
 
     </script>
     <script
