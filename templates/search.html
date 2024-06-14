@@ -136,25 +136,134 @@
             </form>
           </div>
           <!--Cards-->
-          {{data.webtoons}}
 
           <div class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5">
-            {% for data in data.webtoons %}
+            {% if data.webtoons.naver and data.webtoons.naver|length > 0 %} {%
+            for webtoon in data.webtoons.naver %}
             <a
               class="button-link"
-              href="{{ url_for('webtoonDetail', webtoon_id=data.webtoonId) }}"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
             >
-              <div class="col webtoon-item" id="{{data.webtoonId}}">
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
                 <div class="card h-100">
                   <img
-                    src="{{ data.img }}"
-                    class="card-img-top img-fluid"
+                    src="{{ webtoon.img }}"
+                    class="card-img-top"
                     alt="album cover image"
                   />
-                </div></div
-            ></a>
-            {% endfor %}
+                  <div class="card-body">
+                    <button
+                      type="button"
+                      class="btn btn-success mb-4"
+                      style="font-weight: 600; max-width: 300px; width: 130px"
+                    >
+                      <span id="serviceName">네이버</span>
+                      <span id="updateDay" class="badge text-bg-dark ms-1">
+                        {% if webtoon.update_days == "mon" %} 월 {% elif
+                        webtoon.update_days == "tue" %} 화 {% elif
+                        webtoon.update_days == "wed" %} 수 {% elif
+                        webtoon.update_days == "thu" %} 목 {% elif
+                        webtoon.update_days == "fri" %} 금 {% elif
+                        webtoon.update_days == "sun" %} 토 {% elif
+                        webtoon.update_days == "finished" %} 완결 {% else %}
+                        매일+ {% endif %}
+                      </span>
+                    </button>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
+                  </div>
+                </div>
+              </div></a
+            >
+            {% endfor %} {% endif %}
           </div>
+          <div class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5">
+            {% if data.webtoons.kakao and data.webtoons.kakao|length > 0 %} {%
+            for webtoon in data.webtoons.kakao %}
+            <a
+              class="button-link"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
+            >
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
+                <div class="card h-100">
+                  <img
+                    src="{{ webtoon.img }}"
+                    class="card-img-top"
+                    alt="album cover image"
+                  />
+                  <div class="card-body">
+                    <button
+                      type="button"
+                      class="btn btn-warning mb-4"
+                      style="font-weight: 600; max-width: 300px; width: 130px"
+                    >
+                      <span id="serviceName">카카오</span>
+                      <span id="updateDay" class="badge text-bg-dark ms-1">
+                        {% if webtoon.update_days == "mon" %} 월 {% elif
+                        webtoon.update_days == "tue" %} 화 {% elif
+                        webtoon.update_days == "wed" %} 수 {% elif
+                        webtoon.update_days == "thu" %} 목 {% elif
+                        webtoon.update_days == "fri" %} 금 {% elif
+                        webtoon.update_days == "sun" %} 토 {% elif
+                        webtoon.update_days == "finished" %} 완결 {% else %}
+                        매일+ {% endif %}
+                      </span>
+                    </button>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
+                  </div>
+                </div>
+              </div></a
+            >
+            {% endfor %} {% endif %}
+          </div>
+          <div class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5">
+            {% if data.webtoons.kakaoPage and data.webtoons.kakaoPage|length > 0
+            %} {% for webtoon in data.webtoons.kakaoPage %}
+            <a
+              class="button-link"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
+            >
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
+                <div class="card h-100">
+                  <img
+                    src="{{ webtoon.img }}"
+                    class="card-img-top"
+                    alt="album cover image"
+                  />
+                  <div class="card-body">
+                    <button
+                      type="button"
+                      class="btn btn-warning mb-4"
+                      style="font-weight: 600; max-width: 300px; width: 130px"
+                    >
+                      <span id="serviceName">카카오 페이지</span>
+                      <span id="updateDay" class="badge text-bg-dark ms-1">
+                        {% if webtoon.update_days == "mon" %} 월 {% elif
+                        webtoon.update_days == "tue" %} 화 {% elif
+                        webtoon.update_days == "wed" %} 수 {% elif
+                        webtoon.update_days == "thu" %} 목 {% elif
+                        webtoon.update_days == "fri" %} 금 {% elif
+                        webtoon.update_days == "sun" %} 토 {% elif
+                        webtoon.update_days == "finished" %} 완결 {% else %}
+                        매일+ {% endif %}
+                      </span>
+                    </button>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
+                  </div>
+                </div>
+              </div></a
+            >
+            {% endfor %} {% endif %}
+          </div>
+
+          <!--예외 처리-->
+          {% if (not data.webtoons.naver or data.webtoons.naver|length == 0) and
+          (not data.webtoons.kakao or data.webtoons.kakao|length == 0) and (not
+          data.webtoons.kakaoPage or data.webtoons.kakaoPage|length == 0) %}
+          <p>찾으시는 웹툰이 없습니다.</p>
+          {% endif %}
           <!--Cards-->
         </div>
       </main>
@@ -189,7 +298,12 @@
         </div>
       </footer>
     </div>
-    <script></script>
+    <script>
+      const serviceSpan = document.getElementById("serviceName");
+      if (serviceSpan.innerText === "카카오") {
+        serviceSpan.parentNode.classList.add("btn-warning");
+      }
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

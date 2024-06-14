@@ -96,7 +96,7 @@ def render_user_filter(username):
 def webtoon():
     # 서비스 별, 날짜 순서대로 Webtoon data 반환
     def get_by_service_webtoon_db(service):
-        service = db.session.query(Webtoon).filter_by(service=service).order_by(update_days_order).all()
+        service = Webtoon.query.filter_by(service=service).order_by(update_days_order).all()
         webtoon_list = [webtoon.to_dict() for webtoon in service]
         return webtoon_list
 
@@ -119,18 +119,28 @@ def search():
     # GET 메소드로 검색 결과 받아오기
     keyword = request.args.get('keyword')
 
-    # keyword 있으면 웹툰 API 받아오기
+    # 입력된 keyword, service에 대해 날짜순으로 웹툰 db 조회
+    def get_by_keyword_filter_by_service_webtoon_db(keyword, service):
+        webtoons = Webtoon.query.filter(Webtoon.search_keyword.like(f'%{keyword}%')).filter_by(service=service).order_by(update_days_order).all()
+        webtoon_list = [webtoon.to_dict() for webtoon in webtoons]
+        if webtoon_list:
+            return webtoon_list
+        else:
+            return None
+    
     if keyword:
-        search_api_url = f"https://korea-webtoon-api.herokuapp.com/search?keyword={keyword}"
-        headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-        response = requests.get(search_api_url, headers=headers)
-        webtoons = response.json()["webtoons"]
         context = {
-            "webtoons" : webtoons,
+            "naver" : get_by_keyword_filter_by_service_webtoon_db(keyword, "naver"),
+            "kakao" : get_by_keyword_filter_by_service_webtoon_db(keyword, "kakao"), 
+            "kakaoPage" : get_by_keyword_filter_by_service_webtoon_db(keyword, "kakaoPage")
+        }
+
+        data = {
+            "webtoons" : context,
             "keyword": keyword,
         }
 
-        return render_template("search.html", data=context)
+        return render_template("search.html", data=data)
     # 키워드 없으면 원래대로 리디렉션
     else:
         return redirect(url_for('webtoon'))
