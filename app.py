@@ -3,6 +3,7 @@ import requests
 
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import case
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -60,6 +61,20 @@ class Webtoon(db.Model):
             "search_keyword": self.search_keyword
         }
 
+
+# # 사용자 정의 정렬 순서
+update_days_order = case(
+    (Webtoon.update_days == 'mon', 1),
+    (Webtoon.update_days == 'tue', 2),
+    (Webtoon.update_days == 'wed', 3),
+    (Webtoon.update_days == 'thu', 4),
+    (Webtoon.update_days == 'fri', 5),
+    (Webtoon.update_days == 'sat', 6),
+    (Webtoon.update_days == 'sun', 7),
+    (Webtoon.update_days == 'finished', 8),
+    (Webtoon.update_days == 'naverDaily', 9)
+)
+
 # ✅ 서버 시작 전 이미 생성해 뒀기 때문에 빼도 될거 같음
 # ✅ 프로덕션 환경에선 빼도 된다고 하는데 확인 필요
 # with app.app_context():
@@ -71,35 +86,107 @@ def home():
     return render_template("home.html")
 
 
+# @app.route('/user')
+# def user():
+
+#     review_list = Review.query.all()
+#     webtoon_list = Webtoon.query.all()
+
+#     # 새 배열
+#     webtoon_reviews = []
+
+#     # webtoon_list id와 같은 id 찾아서 가진 요소 넣기
+#     for userReview in review_list:
+#         for webtoon in webtoon_list:
+#             webtoon_id_list = Webtoon.query.filter_by(
+#                 userReview['id'] == webtoon['id']).all()
+#             user_review_list = Review.query.filter_by(
+#                 userReview['id'] == webtoon['id']).all()
+#             webtoon_reviews.append({
+#                 'username': user_review_list['username'],
+#                 'review': user_review_list['review'],
+#                 'title': webtoon_id_list['title'],
+#                 'author': webtoon_id_list['author'],
+#                 'url': webtoon_id_list['url'],
+#                 'img': webtoon_id_list['img'],
+#                 'service': webtoon_id_list['service'],
+#                 'webtoon_id': webtoon_id_list['webtoon_id']
+#             })
+
+#     return render_template('user.html', data=webtoon_reviews)
 @app.route('/user')
 def user():
-    data_list = Review.query.all()
-    return render_template('user.html', data=data_list)
+    reviews = Review.query.all()
+    webtoons = Webtoon.query.all()
+
+    # 배열 생성
+    webtoon_reviews = []
+
+    for review in reviews:
+        for webtoon in webtoons:
+            # 리뷰와 웹툰이 일치하면 추가
+            if review.webtoon_id == webtoon.webtoon_id:
+                webtoon_reviews.append({
+                    'username': review.username,
+                    'review': review.review,
+                    'title': webtoon.title,
+                    'author': webtoon.author,
+                    'url': webtoon.url,
+                    'img': webtoon.img,
+                    'service': webtoon.service,
+                    'webtoon_id': webtoon.webtoon_id
+                })
+
+    return render_template('user.html', data=webtoon_reviews)
 
 
 @app.route('/user/<username>')
 def render_user_filter(username):
     filter_list = Review.query.filter_by(username=username).all()
-    return render_template('user.html', data=filter_list)
+    webtoons = Webtoon.query.all()
+
+    # 배열 생성
+    webtoon_reviews = []
+
+    for review in filter_list:
+        for webtoon in webtoons:
+            # 리뷰와 웹툰이 일치하면 추가
+            if review.webtoon_id == webtoon.webtoon_id:
+                webtoon_reviews.append({
+                    'username': review.username,
+                    'review': review.review,
+                    'title': webtoon.title,
+                    'author': webtoon.author,
+                    'url': webtoon.url,
+                    'img': webtoon.img,
+                    'service': webtoon.service,
+                    'webtoon_id': webtoon.webtoon_id
+                })
+
+    return render_template('user.html', data=webtoon_reviews)
 
 
 @app.route("/webtoon", methods=['GET', 'POST'])
 def webtoon():
-    # context = {
-    #     "naver": get_by_service_webtoon_db(service="naver"),
-    #     "kakao": get_by_service_webtoon_db(service="kakao"),
-    #     "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
-    # }
+    # 서비스 별, 날짜 순서대로 Webtoon data 반환
+    def get_by_service_webtoon_db(service):
+        service = db.session.query(Webtoon).filter_by(
+            service=service).order_by(update_days_order).all()
+        webtoon_list = [webtoon.to_dict() for webtoon in service]
+        return webtoon_list
 
-    kakao = db.session.query(Webtoon).filter_by(service="kakao").all()
-    webtoon_list = [webtoon.to_dict() for webtoon in kakao]
+    context = {
+        "naver": get_by_service_webtoon_db(service="naver"),
+        "kakao": get_by_service_webtoon_db(service="kakao"),
+        "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
+    }
 
     # 검색 시 GET 사용할 경우 혼동 생기므로, POST 로 받아 서치로 리디렉션 먼저하기
     if request.method == 'POST':
         keyword = request.form.get('keyword')
         return redirect(url_for('search', keyword=keyword))
 
-    return render_template("webtoon.html", data=webtoon_list)
+    return render_template("webtoon.html", data=context)
 
 
 @app.route("/webtoon/search")
@@ -129,11 +216,15 @@ def search():
 def webtoonDetail(webtoon_id):
 
     # 웹툰 하나하나 가져오는 api
-    # naver_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=20&service=naver"
-    api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=100"
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-    response = requests.get(api_url, headers=headers)
+    # kakao = db.session.query(Webtoon).filter_by(service="kakao").all()
+    # webtoon_list = [webtoon.to_dict() for webtoon in kakao]
+
+    # api 데이를 순회해서 id 같은 웹툰 찾기
+    webtoon = Webtoon.query.filter_by(webtoon_id=int(webtoon_id)).first()
+
+    # 리뷰 데이터: webtoon_id 필터해서 가져오기
+    # reviews = Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
+    # review_list = [review.to_dict() for review in reviews]
 
     # 해당 웹툰에 대한 리뷰 데이터를 db에서 가져오는 곳
     # 테스트용 데이터
@@ -151,17 +242,9 @@ def webtoonDetail(webtoon_id):
     webtoon_review_list.append(review1)
     webtoon_review_list.append(review1)
 
-    # 리뷰 데이터: webtoon_id 필터해서 가져오기
-    # Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
-
-    # api 데이를 순회해서 id 같은 웹툰 찾기
-    webtoons = response.json().get("webtoons", [])
-    webtoon_detail = next((webtoon for webtoon in webtoons if int(
-        webtoon['webtoon_id']) == int(webtoon_id)), None)
-
     # 웹툰 데이터, 웹툰 리뷰 데이터
     data = {
-        "webtoon_detail": webtoon_detail,
+        "webtoon_detail": webtoon,
         "webtoon_review_list": webtoon_review_list,
     }
 
@@ -200,7 +283,7 @@ def webtoon_delete():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=8080)
 
 
 # data = [

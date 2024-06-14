@@ -41,14 +41,14 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
       }
+      a.nav-link {
+        color: #fff;
+      }
       h1 {
         color: #fff;
       }
         .wrapper {
             margin: 10%;
-        }
-        .user-wrap {
-            height: 20vh;
         }
         .user-wrap > div {
             font-size: 2rem;
@@ -79,56 +79,56 @@
     </style>
 </head>
 <body data-bs-theme="dark">
-    <div class="wrapper">
-        <nav
-        class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between"
-        data-bs-theme="dark"
-      >
-        <div class="ms-3">
-          <a class="link-body-emphasis" href="/">
-            <img
-              class="logo"
-              src="{{ url_for('static', filename='image/logo.png') }}"
-              alt="logo"
-          /></a>
+    <nav
+    class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between"
+    data-bs-theme="dark"
+  >
+    <div class="ms-3">
+      <a class="link-body-emphasis" href="/">
+        <img
+          class="logo"
+          src="{{ url_for('static', filename='image/logo.png') }}"
+          alt="logo"
+      /></a>
+    </div>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">홈</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/webtoon"
+                >웹툰별 리뷰</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/user"
+                >유저별 리뷰</a
+              >
+            </li>
+          </ul>
         </div>
-        <nav class="navbar navbar-expand-lg">
-          <div class="container-fluid">
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/">홈</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/webtoon"
-                    >웹툰별 리뷰</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/user"
-                    >유저별 리뷰</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </nav>
+      </div>
+    </nav>
+  </nav>
+    <div class="wrapper">
         <div id="user-wrap" class="user-wrap">
         {% for e in data %}
             <div class="username row row-cols-1 row-cols-md-4 g-4">
-                <h1 style="position: absolute">{{e.username}} 유저가 쓴 리뷰</h1>
+                <h1 style="position: absolute;">{{e.username}} 님이 쓴 리뷰</h1>
                 <div class="row" style="margin-top: 7%;
                 margin-bottom: 10%;">
                     <div class="col">
@@ -136,7 +136,7 @@
                             <div class="card-body">
                                 <img src="{{e.img}}" alt="" style="width: 100%">
                                 <h5 class="card-title" style="font-size: 1.5rem; margin-top: 10px;">{{e.title}}</h5>
-                                <p class="card-text" style="font-size: 1.7rem;">{{e.webtoon_review}}</p>
+                                <p class="card-text" style="font-size: 1.7rem;">{{e.review}}</p>
                                 <button id={{e.webtoon_id}} class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" name="button" value="{{e.webtoon_id}}"
                                 >
                                 <a
@@ -154,9 +154,6 @@
         {% endfor %}
         </div>
     </div>   
-
-    </div>
-    {% endfor %}
     <div class="container">
         <footer>
           <div
@@ -194,19 +191,19 @@
                 serviceColor[i].style.backgroundColor = 'rgb(64,204,36)';
             }
         }
-
-        console.log(document.getElementsByClassName('username')[0].children[1])
+        
         userList = document.getElementsByClassName('username');
         for(var i = 0; i < userList.length; i++){
-            for(var j = 0; j <userList.length; j++){
-                if(userList[j].children[0].innerText == userList[i].children[0].innerText){
-                    if( j+1 != 1 ){
-                        userList[i].append(userList[j].children[1]);
-                        userList[j].children[0].remove();
-                    }
-                }
-            }
+          for(var j = i + 1; j <= userList.length; j++){
+              if(userList[j].children[0].innerText == userList[i].children[0].innerText){
+                      userList[i].append(userList[j].children[1]);
+                      userList[j].remove();
+                      j = i;
+                      break;
+              }
+          }
         }
+
     </script>
 
 </body>
