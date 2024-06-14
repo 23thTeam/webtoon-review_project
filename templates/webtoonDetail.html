@@ -166,7 +166,7 @@
                     <span
                       class="badge text-bg-dark ms-1"
                       id="updateDay"
-                      data-update-day="{{data.webtoon_detail.updateDays[0]}}"
+                      data-update-day="{{data.webtoon_detail.update_days}}"
                     ></span>
                   </button>
                   <h2 class="card-title">{{ data.webtoon_detail.title }}</h2>
@@ -175,7 +175,7 @@
                   </h5>
                   <p class="card-text">
                     <small class="text-body-secondary"
-                      >관심 {{data.webtoon_detail.fanCount}}만 </small
+                      >관심 {{data.webtoon_detail.fan_count}}만 </small
                     ><small class="text-warning">+</small>
                   </p>
                   <p class="card-text">
@@ -250,7 +250,7 @@
        <div class="modal-dialog">
          <div class="modal-content">
            <div class="modal-header">
-             <h1 class="modal-title fs-5" id="exampleModalLabel">리뷰 작성</h1>
+             <h1 class="modal-title fs-5" id="exampleModalLabel"><{{ data.webtoon_detail.title }}> 리뷰 작성</h1>
              <button
                type="button"
                class="btn-close"
@@ -261,20 +261,21 @@
            <div class="modal-body">
              <!--modal body-->
              <!--form으로 사용자 입력한 데이터 서버로 보내기-->
-             <form action="{{ url_for('home') }}" method="POST">
-               <!---->
-               <div class="mb-3">
-                <label for="webtoon-title-input" class="form-label">웹툰 제목</label>
+             <form action="{{ url_for('webtoonCreate') }}" method="POST">
+              <!---->
+              <div class="mb-3">
+                <label for="username-input" class="form-label">유저 이름</label>
                 <input
                   type="text"
-                  readonly
                   class="form-control"
-                  id="webtoon-title-input"
-                  name="webtoon-title"
-                  value="{{ data.webtoon_detail.title }}"
+                  id="username-input"
+                  name="username"
                 />
+                <div id="username" class="form-text">
+                  등록하시는 사용자 이름을 넣어주세요.
+                </div>
               </div>
-              <!---->
+               <!---->
                <div class="mb-3">
                  <label for="review-input" class="form-label">리뷰</label>
                  <input
@@ -288,19 +289,6 @@
                 </div>
                </div>
                <!---->
-               <div class="mb-3">
-                <label for="username-input" class="form-label">유저 이름</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="username-input"
-                  name="username"
-                />
-                <div id="username" class="form-text">
-                  등록하시는 사용자 이름을 넣어주세요.
-                </div>
-              </div>
-               <!---->
                <div style="display:none">
                 <div class="mb-3">
                   <label for="webtoon-id-input" class="form-label">웹툰 ID</label>
@@ -310,84 +298,7 @@
                     class="form-control"
                     id="webtoon-id-input"
                     name="webtoon-id"
-                    value="{{ data.webtoon_detail.webtoonId }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-author-input" class="form-label">웹툰 작가</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-author-input"
-                    name="webtoon-author"
-                    value="{{ data.webtoon_detail.author }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-url-input" class="form-label">웹툰 url</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-url-input"
-                    name="webtoon-url"
-                    value="{{ data.webtoon_detail.url }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-img-input" class="form-label">웹툰 이미지</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-img-input"
-                    name="webtoon-img"
-                    value="{{ data.webtoon_detail.img }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-service-input" class="form-label">웹툰 연재처</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-service-input"
-                    name="webtoon-service"
-                    value="{{ data.webtoon_detail.service }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-fanCount-input" class="form-label">웹툰 관심+</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-fanCount-input"
-                    name="webtoon-fanCount"
-                    value="{{ data.webtoon_detail.fanCount }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-searchKeyword-input" class="form-label">웹툰 서치 키워드</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-searchKeyword-input"
-                    name="webtoon-searchKeyword"
-                    value="{{ data.webtoon_detail.searchKeyword }}"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="webtoon-updateDays-input" class="form-label">웹툰 연재일</label>
-                  <input
-                    type="text"
-                    readonly
-                    class="form-control"
-                    id="webtoon-updateDays-input"
-                    name="webtoon-updateDays"
-                    value="{{ data.webtoon_detail.updateDays[0] }}"
+                    value="{{ data.webtoon_detail.webtoon_id }}"
                   />
                 </div>
                </div>
@@ -432,7 +343,6 @@
     </div>
     <script>
       function getDayKorean(updateDays) {
-        // detail.updateDays[0]
         let result = "";
         switch (updateDays) {
           case "mon":

@@ -3,6 +3,7 @@ import requests
 
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import case
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -56,6 +57,19 @@ class Webtoon(db.Model):
             "fan_count": self.fan_count,
             "search_keyword": self.search_keyword
         }
+
+# # 사용자 정의 정렬 순서
+update_days_order = case(
+    (Webtoon.update_days == 'mon', 1),
+    (Webtoon.update_days == 'tue', 2),
+    (Webtoon.update_days == 'wed', 3),
+    (Webtoon.update_days == 'thu', 4),
+    (Webtoon.update_days == 'fri', 5),
+    (Webtoon.update_days == 'sat', 6),
+    (Webtoon.update_days == 'sun', 7),
+    (Webtoon.update_days == 'finished', 8),
+    (Webtoon.update_days == 'naverDaily', 9)
+)
     
 # ✅ 서버 시작 전 이미 생성해 뒀기 때문에 빼도 될거 같음
 # ✅ 프로덕션 환경에선 빼도 된다고 하는데 확인 필요
@@ -80,21 +94,24 @@ def render_user_filter(username):
 
 @app.route("/webtoon", methods=['GET', 'POST'])
 def webtoon():
-    # context = {
-    #     "naver": get_by_service_webtoon_db(service="naver"),
-    #     "kakao": get_by_service_webtoon_db(service="kakao"),
-    #     "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
-    # }
-    
-    kakao = db.session.query(Webtoon).filter_by(service="kakao").all()
-    webtoon_list = [webtoon.to_dict() for webtoon in kakao]
+    # 서비스 별, 날짜 순서대로 Webtoon data 반환
+    def get_by_service_webtoon_db(service):
+        service = db.session.query(Webtoon).filter_by(service=service).order_by(update_days_order).all()
+        webtoon_list = [webtoon.to_dict() for webtoon in service]
+        return webtoon_list
+
+    context = {
+        "naver": get_by_service_webtoon_db(service="naver"),
+        "kakao": get_by_service_webtoon_db(service="kakao"),
+        "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
+    }
     
     # 검색 시 GET 사용할 경우 혼동 생기므로, POST 로 받아 서치로 리디렉션 먼저하기
     if request.method == 'POST':
         keyword = request.form.get('keyword')
         return redirect(url_for('search', keyword=keyword))
 
-    return render_template("webtoon.html", data=webtoon_list)
+    return render_template("webtoon.html", data=context)
 
 
 @app.route("/webtoon/search")
@@ -123,10 +140,15 @@ def search():
 def webtoonDetail(webtoon_id):
 
     # 웹툰 하나하나 가져오는 api
-    # naver_api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=20&service=naver"
-    api_url = "https://korea-webtoon-api.herokuapp.com/?perPage=100"
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'}
-    response = requests.get(api_url, headers=headers)
+    # kakao = db.session.query(Webtoon).filter_by(service="kakao").all()
+    # webtoon_list = [webtoon.to_dict() for webtoon in kakao]
+
+    # api 데이를 순회해서 id 같은 웹툰 찾기
+    webtoon = Webtoon.query.filter_by(webtoon_id=int(webtoon_id)).first()
+
+    # 리뷰 데이터: webtoon_id 필터해서 가져오기
+    # reviews = Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
+    # review_list = [review.to_dict() for review in reviews]
 
     # 해당 웹툰에 대한 리뷰 데이터를 db에서 가져오는 곳
     # 테스트용 데이터
@@ -145,17 +167,9 @@ def webtoonDetail(webtoon_id):
     webtoon_review_list.append(review1)
 
 
-    # 리뷰 데이터: webtoon_id 필터해서 가져오기
-    # Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
-
-    # api 데이를 순회해서 id 같은 웹툰 찾기
-    webtoons = response.json().get("webtoons", [])
-    webtoon_detail = next((webtoon for webtoon in webtoons if int(webtoon['webtoon_id']) == int(webtoon_id)), None)
-
-
     # 웹툰 데이터, 웹툰 리뷰 데이터
     data = {
-        "webtoon_detail": webtoon_detail,
+        "webtoon_detail": webtoon,
         "webtoon_review_list": webtoon_review_list,
     }
 
@@ -193,7 +207,7 @@ def webtoon_delete():
     return render_template('user.html', data=webtoon_list)
 
 if __name__ == "__main__":
-    app.run(debug=True , port=5000)
+    app.run(debug=True , port=8080)
 
 
 
