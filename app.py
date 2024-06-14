@@ -8,15 +8,17 @@ from sqlalchemy import case
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
+    'sqlite:///' + os.path.join(basedir, 'database.db')
 
 db = SQLAlchemy(app)
+
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     review = db.Column(db.String, nullable=False)
     webtoon_id = db.Column(db.Integer, nullable=False)
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -31,7 +33,8 @@ class Review(db.Model):
     # # 디비 확인 위해 디버깅/로그 기록
     # def __repr__(self):
     #     return f'review by {self.username} for webtoon_id: {self.webtoon_id}'
-    
+
+
 class Webtoon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     webtoon_id = db.Column(db.Integer, nullable=False, unique=True)
@@ -40,9 +43,9 @@ class Webtoon(db.Model):
     url = db.Column(db.String, nullable=False)
     img = db.Column(db.String, nullable=False)
     service = db.Column(db.String, nullable=False)
-    update_days = db.Column(db.String, nullable=True) # 없는 것도 있음
-    fan_count = db.Column(db.Integer, nullable=True) # 없는 것도 있음
-    search_keyword =  db.Column(db.String, nullable=False) 
+    update_days = db.Column(db.String, nullable=True)  # 없는 것도 있음
+    fan_count = db.Column(db.Integer, nullable=True)  # 없는 것도 있음
+    search_keyword = db.Column(db.String, nullable=False)
 
     def to_dict(self):
         return {
@@ -70,26 +73,96 @@ update_days_order = case(
     (Webtoon.update_days == 'finished', 8),
     (Webtoon.update_days == 'naverDaily', 9)
 )
-    
+
 # ✅ 서버 시작 전 이미 생성해 뒀기 때문에 빼도 될거 같음
 # ✅ 프로덕션 환경에선 빼도 된다고 하는데 확인 필요
 # with app.app_context():
 #     db.create_all()
 
 
-@app.route('/') # 홈으로 설정
+@app.route('/')  # 홈으로 설정
 def home():
     return render_template("home.html")
 
+
+# @app.route('/user')
+# def user():
+
+#     review_list = Review.query.all()
+#     webtoon_list = Webtoon.query.all()
+
+#     # 새 배열
+#     webtoon_reviews = []
+
+#     # webtoon_list id와 같은 id 찾아서 가진 요소 넣기
+#     for userReview in review_list:
+#         for webtoon in webtoon_list:
+#             webtoon_id_list = Webtoon.query.filter_by(
+#                 userReview['id'] == webtoon['id']).all()
+#             user_review_list = Review.query.filter_by(
+#                 userReview['id'] == webtoon['id']).all()
+#             webtoon_reviews.append({
+#                 'username': user_review_list['username'],
+#                 'review': user_review_list['review'],
+#                 'title': webtoon_id_list['title'],
+#                 'author': webtoon_id_list['author'],
+#                 'url': webtoon_id_list['url'],
+#                 'img': webtoon_id_list['img'],
+#                 'service': webtoon_id_list['service'],
+#                 'webtoon_id': webtoon_id_list['webtoon_id']
+#             })
+
+#     return render_template('user.html', data=webtoon_reviews)
 @app.route('/user')
 def user():
-    data_list = Review.query.all()
-    return render_template('user.html', data=data_list)
+    reviews = Review.query.all()
+    webtoons = Webtoon.query.all()
+
+    # 배열 생성
+    webtoon_reviews = []
+
+    for review in reviews:
+        for webtoon in webtoons:
+            # 리뷰와 웹툰이 일치하면 추가
+            if review.webtoon_id == webtoon.webtoon_id:
+                webtoon_reviews.append({
+                    'username': review.username,
+                    'review': review.review,
+                    'title': webtoon.title,
+                    'author': webtoon.author,
+                    'url': webtoon.url,
+                    'img': webtoon.img,
+                    'service': webtoon.service,
+                    'webtoon_id': webtoon.webtoon_id
+                })
+
+    return render_template('user.html', data=webtoon_reviews)
+
 
 @app.route('/user/<username>')
 def render_user_filter(username):
     filter_list = Review.query.filter_by(username=username).all()
-    return render_template('user.html', data=filter_list)
+    webtoons = Webtoon.query.all()
+
+    # 배열 생성
+    webtoon_reviews = []
+
+    for review in filter_list:
+        for webtoon in webtoons:
+            # 리뷰와 웹툰이 일치하면 추가
+            if review.webtoon_id == webtoon.webtoon_id:
+                webtoon_reviews.append({
+                    'username': review.username,
+                    'review': review.review,
+                    'title': webtoon.title,
+                    'author': webtoon.author,
+                    'url': webtoon.url,
+                    'img': webtoon.img,
+                    'service': webtoon.service,
+                    'webtoon_id': webtoon.webtoon_id
+                })
+
+    return render_template('user.html', data=webtoon_reviews)
 
 
 @app.route("/webtoon", methods=['GET', 'POST'])
@@ -105,7 +178,7 @@ def webtoon():
         "kakao": get_by_service_webtoon_db(service="kakao"),
         "kakaoPage": get_by_service_webtoon_db(service="kakaoPage"),
     }
-    
+
     # 검색 시 GET 사용할 경우 혼동 생기므로, POST 로 받아 서치로 리디렉션 먼저하기
     if request.method == 'POST':
         keyword = request.form.get('keyword')
@@ -162,7 +235,7 @@ def webtoonDetail(webtoon_id):
 
     # 해당 웹툰에 대한 리뷰 데이터를 db에서 가져오는 곳
     # 테스트용 데이터
-    webtoon_review_list =  []
+    webtoon_review_list = []
     review1 = {
         'username': '유저 이름',
         'title': '리뷰 제목',
@@ -176,7 +249,6 @@ def webtoonDetail(webtoon_id):
     webtoon_review_list.append(review1)
     webtoon_review_list.append(review1)
 
-
     # 웹툰 데이터, 웹툰 리뷰 데이터
     data = {
         "webtoon_detail": webtoon,
@@ -189,19 +261,19 @@ def webtoonDetail(webtoon_id):
 @app.route("/webtoon/create", methods=["POST"])
 def webtoonCreate():
     webtoon_username_receive = request.form.get("username")
-    webtoon_review_receive=request.form.get("review")
+    webtoon_review_receive = request.form.get("review")
     webtoon_id_receive = request.form.get("webtoon-id")
 
     webtoon = Review(
-                username=webtoon_username_receive,  
-                review=webtoon_review_receive,
-                webtoon_id=webtoon_id_receive,
-                )
+        username=webtoon_username_receive,
+        review=webtoon_review_receive,
+        webtoon_id=webtoon_id_receive,
+    )
 
     db.session.add(webtoon)
     db.session.commit()
 
-    return redirect(url_for("render_user_filter",username=webtoon_username_receive))
+    return redirect(url_for("render_user_filter", username=webtoon_username_receive))
 
 
 # ✅ 엔드포인트 바꿔야 할것 같아요 웹툰을 삭제하는게 아니라 리뷰를 삭제하는 거니까
@@ -216,23 +288,6 @@ def webtoon_delete():
     webtoon_list = Review.query.all()
     return render_template('user.html', data=webtoon_list)
 
+
 if __name__ == "__main__":
-    app.run(debug=True , port=8080)
-
-
-
-
-# data = [
-#     {
-#         '_id': '63821f5724614f7fb3c99267', 
-#         'webtoon_id': 1000000797153, 
-#         'title': '일진담당일진', 
-#         'author': 'GRIMZO', 
-#         'url': 'https://m.comic.naver.com/webtoon/list?titleId=797153&week=dailyPlus',
-#         'img': 'https://image-comic.pstatic.net/webtoon/797153/thumbnail/thumbnail_IMAG21_62fa8e3d-e445-4dd4-9730-88364faa18e0.jpg',
-#         'service': 'naver',
-#         'updateDays': ['naverDaily'],
-#         'fanCount': 50,
-#         'searchKeyword': '일진담당일진grimzo',
-#         'additional': {'new': False, 'adult': False, 'rest': False, 'up': False, 'singularityList': ['waitFree']}
-#         }, { ... }, ... ]
+    app.run(debug=True, port=5000)
