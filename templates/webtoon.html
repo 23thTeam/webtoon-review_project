@@ -116,6 +116,7 @@
 
       <!--Main-->
       <main>
+        <ul></ul>
         <div
           class="d-flex flex-column justify-content-center px-4 py-5 my-5 text-center"
         >
@@ -125,7 +126,7 @@
           >
             <h1 class="fw-bold text-body-emphasis w-100">웹툰 검색</h1>
             <form
-              action="{{ url_for('webtoon') }}"
+              action="/webtoon"
               method="POST"
               class="d-flex flex-row w-100 search rounded search-bar"
             >
@@ -146,44 +147,74 @@
           <div
             class="row row-cols-1 row-cols-md-4 g-4 mx-auto w-75 pb-5 main-card rounded"
           >
-            {% for data in data.naver %}
+            {% for webtoon in data.naver %}
             <a
               class="button-link"
-              href="{{ url_for('webtoonDetail', webtoon_id=data.webtoonId) }}"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
             >
-              <div class="col webtoon-item" id="{{data.webtoonId}}">
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
                 <div class="card h-100">
                   <img
-                    src="{{ data.img }}"
+                    src="{{ webtoon.img }}"
                     class="card-img-top"
                     alt="album cover image"
                   />
                   <div class="card-body">
-                    <h5 class="card-title">{{ data.title }}</h5>
-                    <p class="card-text">{{ data.author }}</p>
-                    <p class="card-text">{{ data.service }}</p>
-                    <p class="card-text">{{ data.updateDays[0] }}</p>
+                    <button
+                      type="button"
+                      class="btn btn-success mb-4"
+                      style="font-weight: 600; max-width: 300px; width: 130px"
+                    >
+                      <span id="serviceName">네이버</span>
+                      <span id="updateDay" class="badge text-bg-dark ms-1">
+                        {% if webtoon.update_days == "mon" %} 월 {% elif
+                        webtoon.update_days == "tue" %} 화 {% elif
+                        webtoon.update_days == "wed" %} 수 {% elif
+                        webtoon.update_days == "thu" %} 목 {% elif
+                        webtoon.update_days == "fri" %} 금 {% elif
+                        webtoon.update_days == "sun" %} 토 {% elif
+                        webtoon.update_days == "finished" %} 완결 {% else %}
+                        매일+ {% endif %}
+                      </span>
+                    </button>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
                   </div>
                 </div>
               </div></a
             >
-            {% endfor %} {% for data in data.kakao %}
+            {% endfor %} {% for webtoon in data.kakao %}
             <a
               class="button-link"
-              href="{{ url_for('webtoonDetail', webtoon_id=data.webtoonId) }}"
+              href="{{ url_for('webtoonDetail', webtoon_id=webtoon.webtoon_id) }}"
             >
-              <div class="col webtoon-item" id="{{data.webtoonId}}">
+              <div class="col webtoon-item" id="{{webtoon.webtoon_id}}">
                 <div class="card h-100">
                   <img
-                    src="{{ data.img }}"
+                    src="{{ webtoon.img }}"
                     class="card-img-top"
                     alt="album cover image"
                   />
                   <div class="card-body">
-                    <h5 class="card-title">{{ data.title }}</h5>
-                    <p class="card-text">{{ data.author }}</p>
-                    <p class="card-text">{{ data.service }}</p>
-                    <p class="card-text">{{ data.updateDays[0] }}</p>
+                    <button
+                      type="button"
+                      class="btn btn-warning mb-4"
+                      style="font-weight: 600; max-width: 300px; width: 130px"
+                    >
+                      <span id="serviceName">카카오</span>
+                      <span id="updateDay" class="badge text-bg-dark ms-1">
+                        {% if webtoon.update_days == "mon" %} 월 {% elif
+                        webtoon.update_days == "tue" %} 화 {% elif
+                        webtoon.update_days == "wed" %} 수 {% elif
+                        webtoon.update_days == "thu" %} 목 {% elif
+                        webtoon.update_days == "fri" %} 금 {% elif
+                        webtoon.update_days == "sun" %} 토 {% elif
+                        webtoon.update_days == "finished" %} 완결 {% else %}
+                        매일+ {% endif %}
+                      </span>
+                    </button>
+                    <h5 class="card-title">{{ webtoon.title }}</h5>
+                    <p class="card-text">{{ webtoon.author }}</p>
                   </div>
                 </div>
               </div></a
@@ -224,7 +255,12 @@
         </div>
       </footer>
     </div>
-    <script></script>
+    <script>
+      const serviceSpan = document.getElementById("serviceName");
+      if (serviceSpan.innerText === "카카오") {
+        serviceSpan.parentNode.classList.add("btn-warning");
+      }
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
