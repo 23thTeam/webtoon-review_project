@@ -218,6 +218,15 @@
                         <h5 class="card-title">{{ review.title }}</h5>
                         <p class="card-text">{{ review.review }}</p>
                         <p class="card-text">{{ review.webtoon_id }}</p>
+                        
+                        <button
+                          type="button"
+                          class="btn btn-success m-3"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                        >
+                          리뷰 쓰기
+                        </button>
                         <form action="{{url_for('review_delete')}}" method="GET">
                           <p><input type="hidden" name="webtoon_id" value="{{review.webtoon_id}}"></p>
                           <button type="submit" class="btn btn-primary">삭제하기</button>
@@ -293,6 +302,77 @@
                  />
                  <div id="review" class="form-text">
                   리뷰를 작성해주세요.
+                </div>
+               </div>
+               <!---->
+               <div style="display:none">
+                <div class="mb-3">
+                  <label for="webtoon-id-input" class="form-label">웹툰 ID</label>
+                  <input
+                    type="text"
+                    readonly
+                    class="form-control"
+                    id="webtoon-id-input"
+                    name="webtoon-id"
+                    value="{{ data.webtoon_detail.webtoon_id }}"
+                  />
+                </div>
+               </div>
+               <!---->
+               <button type="submit" class="btn btn-success">작성 완료</button>
+             </form>
+             <!--modal body-->
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <div
+       class="modal fade"
+       id="exampleModal_update"
+       tabindex="-1"
+       aria-labelledby="exampleModalLabel_update"
+       aria-hidden="true"
+     >
+       <div class="modal-dialog">
+         <div class="modal-content">
+           <div class="modal-header">
+             <h1 class="modal-title fs-5" id="exampleModalLabel_update"><{{ data.webtoon_detail.title }}> 리뷰 작성</h1>
+             <button
+               type="button"
+               class="btn-close"
+               data-bs-dismiss="modal"
+               aria-label="Close"
+             ></button>
+           </div>
+           <div class="modal-body">
+             <!--modal body-->
+             <!--form으로 사용자 입력한 데이터 서버로 보내기-->
+             <form action="{{ url_for('webtoonCreate') }}" method="POST">
+              <!---->
+              <div class="mb-3">
+                <label for="username-input" class="form-label">유저 이름</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username-input"
+                  name="username"
+                />
+                <div id="username" class="form-text">
+                  수정하시려는 사용자 이름을 넣어주세요.
+                </div>
+              </div>
+               <!---->
+               <div class="mb-3">
+                 <label for="review-input" class="form-label">리뷰</label>
+                 <input
+                   type="text"
+                   class="form-control"
+                   id="review-input"
+                   name="review"
+                 />
+                 <div id="review" class="form-text">
+                  수정할 리뷰를 작성해주세요.
                 </div>
                </div>
                <!---->
