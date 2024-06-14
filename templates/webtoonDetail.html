@@ -64,6 +64,11 @@
         padding: 3rem;
       }
 
+      .button-link {
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 텍스트 색상 상속 */
+      }
+
       #card-hover:hover {
         cursor: pointer;
         background-color: rgba(
@@ -242,6 +247,8 @@
                   {% if data.webtoon_review_list %} {% for review in
                   data.webtoon_review_list %}
                   <div class="review-box col">
+                    <a class="button-link"
+                    href="{{ url_for('user', username=review.username) }}">
                     <div id="card-hover" class="card h-100">
                       <div class="card-body">
                         <p class="card-text">
@@ -249,10 +256,10 @@
                             >{{ review.username }}</small
                           >
                         </p>
-                        <h5 class="card-title">{{ review.title }}</h5>
-                        <p class="card-text">{{ review.text }}</p>
+                        <p class="card-text">{{ review.review }}</p>
                       </div>
                     </div>
+                  </a>
                   </div>
                   {% endfor %} {% else %}
                   <p>

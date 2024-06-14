@@ -49,12 +49,12 @@
 
       main {
         padding: 0 2rem 5rem 2rem;
+        height: 80vh;
       }
 
       .main-logo {
-        width: 8rem;
-        height: 8rem;
-        margin-bottom: 2rem;
+        width: 70%;
+        height: auto;
       }
 
       .button-link {
@@ -117,28 +117,34 @@
 
       <!--Main-->
       <main>
-        <div class="px-4 py-5 my-5 text-center">
+        <div class="px-4 text-center">
           <img
             class="main-logo"
-            src="{{ url_for('static', filename='image/favicon.png') }}"
+            src="{{ url_for('static', filename='image/webtoonus_big_trans_white.png') }}"
             alt="logo"
           />
-          <h1 class="display-5 fw-bold text-body-emphasis">웹툰어스</h1>
-          <div class="col-lg-6 mx-auto">
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a class="button-link" href="/webtoon">
+            <button type="button" class="btn btn-success p-2">
+              리뷰 쓰러 가기
+            </button>
+          </a>
+          <div>
+          <!-- <h1 class="display-5 fw-bold text-body-emphasis">웹툰어스</h1> -->
+          <!-- <div class="col-lg-6 mx-auto">
             <br />
             <p class="lead mb-4">
               재밌게 본 웹툰이 있나요?<br />
               웹툰어스에서 웹툰을 리뷰해 보세요!
             </p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-              <!-- Button trigger modal -->
               <a class="button-link" href="/webtoon">
                 <button type="button" class="btn btn-success">
                   리뷰 쓰러 가기
                 </button>
               </a>
             </div>
-          </div>
+          </div> -->
         </div>
       </main>
       <!--Main-->

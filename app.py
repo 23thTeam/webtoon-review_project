@@ -230,24 +230,24 @@ def webtoonDetail(webtoon_id):
     webtoon = Webtoon.query.filter_by(webtoon_id=int(webtoon_id)).first()
 
     # 리뷰 데이터: webtoon_id 필터해서 가져오기
-    # reviews = Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
-    # review_list = [review.to_dict() for review in reviews]
+    reviews = Review.query.filter_by(webtoon_id=int(webtoon_id)).all()
+    webtoon_review_list = [review.to_dict() for review in reviews]
 
     # 해당 웹툰에 대한 리뷰 데이터를 db에서 가져오는 곳
     # 테스트용 데이터
-    webtoon_review_list = []
-    review1 = {
-        'username': '유저 이름',
-        'title': '리뷰 제목',
-        'text': '리뷰 텍스트 리뷰 텍스트 리뷰 텍스트 테스트'
-    }
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
-    webtoon_review_list.append(review1)
+    # webtoon_review_list = []
+    # review1 = {
+    #     'username': '유저 이름',
+    #     'title': '리뷰 제목',
+    #     'text': '리뷰 텍스트 리뷰 텍스트 리뷰 텍스트 테스트'
+    # }
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
+    # webtoon_review_list.append(review1)
 
     # 웹툰 데이터, 웹툰 리뷰 데이터
     data = {
