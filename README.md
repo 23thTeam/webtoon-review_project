@@ -404,6 +404,8 @@
 - 웹툰 정보를 활용한 웹 사이트를 구성하기 위해 [korea-webtoon-api](https://github.com/HyeokjaeLee/korea-webtoon-api)를 사용하여 웹툰 정보를 가져와 화면에 렌더링하고, 사용자의 리뷰 작성 데이터에 추가하는 등의 작업을 하고 있었습니다.
 - 로컬 환경에서는 아무런 문제 없이 잘 진행되어 프로덕트 환경에서도 문제가 없는지 확인하기 위해 테스트를 진행하게 되었습니다.
 - 배포 테스트 중, Pythonanyware을 통해 배포한 프로덕트 환경에서는 웹툰 API를 받아오지 못하는 **Server error: MaxRetryError, Proxy error 가 발생**했습니다.
+  <br/>
+  <img width="500" alt="server error" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/7d216fe5-f60f-4c33-9641-7ed8b3c50124">
 
 #### 문제 원인
 - Pythonanyware는 보안을 위해 서버에서 크롤링 할 수 있는 웹사이트를 제한하고 있었습니다.
