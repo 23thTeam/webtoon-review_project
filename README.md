@@ -6,10 +6,10 @@
 <br/>
 
 ## 브로셔
-![webtoonus_big_trans](https://github.com/23thTeam/webtoon-review_project/assets/58466648/b9930d6c-aaf5-4a51-9855-3edda4a5a5e1)
+<br/><img width="800" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/b9930d6c-aaf5-4a51-9855-3edda4a5a5e1">
 
 ## 로고
-![logo](https://github.com/23thTeam/webtoon-review_project/assets/58466648/c16125f2-6d88-4c35-bc87-e6e80165c8e3)
+<br/><img width="200" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/c16125f2-6d88-4c35-bc87-e6e80165c8e3">
 
 <br/>
 <br/>
@@ -84,13 +84,13 @@
 <br/>
 
 ### 3-2. 와이어 프레임 설계
-![](https://github.com/23thTeam/webtoon-review_project/assets/58466648/ad1eb353-5f4f-44a7-bc77-417fb628a566)
+<br/><img height="400" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/ad1eb353-5f4f-44a7-bc77-417fb628a566">
 - 기존에 작성한 와이어 프레임으로 결과와 조금 다릅니다.
 
 <br/>
 
 ### 3-3. ERD 설계
-![](https://github.com/23thTeam/webtoon-review_project/assets/58466648/e9de5ddb-f290-4bde-853f-4db4e59f3a00)
+<br/><img height="400" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/e9de5ddb-f290-4bde-853f-4db4e59f3a00">
 - (🚨 Webtoon 데이터에 Review 데이터를 1대N 관계로 매핑 하지는 못함)
 
 <br/>
@@ -122,12 +122,12 @@
 ### 4-2. 기능 설명
 #### 4-2-1. 웹툰 (은화)
 1. **홈페이지 (`/`)**
-   ![](https://velog.velcdn.com/images/summereuna/post/b556e9ed-ab45-4c5b-a8f6-99c895307744/image.png)
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/b556e9ed-ab45-4c5b-a8f6-99c895307744/image.png">
    - 홈페이지 구성
    - 로고 및 이미지는 무료 템플릿 사이트 이용
 
-2. **웹툰별 리뷰 페이지 (`/webtoon`)**
-   ![](https://velog.velcdn.com/images/summereuna/post/c35ceb21-8f1b-4867-8ae1-de474dd088ce/image.png)
+3. **웹툰별 리뷰 페이지 (`/webtoon`)**
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/c35ceb21-8f1b-4867-8ae1-de474dd088ce/image.png">
    - 웹툰 서비스별, 날짜 순서대로 Webtoon DB를 조회하여 data 처리
    - SQLAlchemy의 case()를 사용하여 조건 별로 컬럼에 숫자 값을 부여하여 순서 처리 가능하게 함
      - Webtoond의 update_days 컬럼이 영문 문자열로 되어 있었기 때문에, "월~일/연재 종료/매일+" 순으로 숫자 값을 부여하여 웹툰 데이터 조회 시 오름 차순으로 정렬할 수 있게 함
@@ -146,7 +146,7 @@
         )
         ```
     
-   ![](https://velog.velcdn.com/images/summereuna/post/0272d96f-cabc-483a-85f8-45cf6e964c9b/image.png)
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/0272d96f-cabc-483a-85f8-45cf6e964c9b/image.png">
    - 웹툰 서비스, 연재일 값을 조건부로 한국어로 변경
    - (예시) 연재일 값 변경 코드
      - (방법 1) jinja2로 구현: if elif else 문
@@ -238,8 +238,8 @@
                 return render_template("webtoon.html", data=context)
             ```
             
-3. **검색 기능 (`/webtoon/search`)**
-   ![](https://velog.velcdn.com/images/summereuna/post/0b2d0655-c593-4dc3-bf29-6811cef20778/image.png)
+5. **검색 기능 (`/webtoon/search`)**
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/0b2d0655-c593-4dc3-bf29-6811cef20778/image.png">
    - 포워딩 받은 keyword를 파라미터로 받아 데이터 처리
      - (코드)
         ```python
@@ -276,15 +276,15 @@
             
             ```
 
-   ![](https://prod-files-secure.s3.us-west-2.amazonaws.com/0270c1af-d253-4437-8a55-c89948b465ff/407a1f8c-910d-4f47-adca-8849dd407848/%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA_2024-06-14_%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE_9.04.55.png)
+   <br/><img width="500" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/2b0eb610-83dd-4b0c-8aae-5aa1f1f4c2cb">
    - **예외 처리**
      - 검색 결과가 없는 경우 None을 반환하여 if else 구문으로 예외 처리
      - 데이터가 없을 때도 에러가 발생하지 않도록 작업
    - **유저 인터페이스 개선**
-     - 데이터가 없는 경우 어울리는 설명 추가
+     - 데이터가 없는 경우 찾는 웹툰이 없다고 표시
 
-4. **웹툰 상세 페이지 (`/webtoon/<webtoon_id>`)**
-   ![](https://velog.velcdn.com/images/summereuna/post/d8fd12d9-bbf6-4681-9ec2-195d813d0967/image.png)
+6. **웹툰 상세 페이지 (`/webtoon/<webtoon_id>`)**
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/d8fd12d9-bbf6-4681-9ec2-195d813d0967/image.png">
    - **웹툰 id 별 Webtoon db 조회**
      - 파라미터로 받은 id 값으로 웹툰 db에서 데이터를 검색하여 웹툰 상세 페이지의 jinja템플릿으로 보내어 각 id 파라미터에 따른 웹툰 상세 정보 조회
      - (코드)
@@ -322,14 +322,13 @@
                 return render_template("webtoonDetail.html", data=data)
             ```
 
-   ![](https://velog.velcdn.com/images/summereuna/post/6cf98564-4b72-453b-9ae4-121322ceebc6/image.png)
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/6cf98564-4b72-453b-9ae4-121322ceebc6/image.png">
    - **웹툰 id 별 전체 사용자 Review db 조회**
      - 웹툰에 대한 모든 사용자 리뷰에 대한 Review db를 조회하여 상세 페이지로 data를 보내고, 상세 페이지에서 사용자가 이 웹툰에 대해 리뷰한 글 조회
    - **jinja템플릿의 for in 구문을 사용하여 reviews 배열 순회**
 
-   ![](https://velog.velcdn.com/images/summereuna/post/ccd973b9-e4fb-459e-b18f-745f5395347f/image.png)
-  
-   ![](https://velog.velcdn.com/images/summereuna/post/08dc6a5a-6a4b-4489-8bd5-34e30117a7a2/image.png)
+   <br/><img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/ccd973b9-e4fb-459e-b18f-745f5395347f/image.png">
+   <img width="500" alt="screenshot" src="https://velog.velcdn.com/images/summereuna/post/08dc6a5a-6a4b-4489-8bd5-34e30117a7a2/image.png">
    - **예외 처리**
      - None 값을 반환하는 데이터의 컬럼에 대해 if else 구문으로 예외 처리
      - 데이터가 없을 때도 에러가 발생하지 않도록 작업
@@ -349,7 +348,7 @@
 
 #### 4-2-3. 유저 (노을)
 1. **전체 유저 리뷰 페이지 (`/user`)**
-   ![](https://github.com/23thTeam/webtoon-review_project/assets/58466648/58f58018-4d9e-4ce4-bfd4-38f9f3886bc8)
+   <br/><img width="500" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/58f58018-4d9e-4ce4-bfd4-38f9f3886bc8">
    - 모든 리뷰와 웹툰을 가져와 해당하는 웹툰 리뷰를 찾아서 데이터를 생성하고 'user.html' 템플릿으로 렌더링
       ```python
       # 배열 생성
@@ -388,7 +387,7 @@
       ```
 
 2. **유저별 리뷰 페이지 (`/user/<username>`)**
-   ![](https://github.com/23thTeam/webtoon-review_project/assets/58466648/a7e98c18-e3a8-4596-94ee-f5d1c2c3d629)
+   <br/><img width="500" alt="screenshot" src="https://github.com/23thTeam/webtoon-review_project/assets/58466648/a7e98c18-e3a8-4596-94ee-f5d1c2c3d629">
    - 특정 유저 이름을 기반으로 해당 유저의 리뷰를 필터링하고, 해당하는 웹툰 리뷰를 찾아서 데이터를 생성하고 'user.html' 템플릿으로 렌더링
       ```python
       filter_list = Review.query.filter_by(username=username).all()
