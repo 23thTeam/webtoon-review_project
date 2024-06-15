@@ -129,10 +129,27 @@
 2. **웹툰별 리뷰 페이지 (`/webtoon`)**
    ![](https://velog.velcdn.com/images/summereuna/post/c35ceb21-8f1b-4867-8ae1-de474dd088ce/image.png)
    - 웹툰 서비스별, 날짜 순서대로 Webtoon DB를 조회하여 data 처리
+   - SQLAlchemy의 case()를 사용하여 조건 별로 컬럼에 숫자 값을 부여하여 순서 처리 가능하게 함
+     - Webtoond의 update_days 컬럼이 영문 문자열로 되어 있었기 때문에, "월~일/연재 종료/매일+" 순으로 숫자 값을 부여하여 웹툰 데이터 조회 시 오름 차순으로 정렬할 수 있게 함
+        ```python
+        # 웹툰 데이터 요일 정렬 순서
+        update_days_order = case(
+            (Webtoon.update_days == 'mon', 1),
+            (Webtoon.update_days == 'tue', 2),
+            (Webtoon.update_days == 'wed', 3),
+            (Webtoon.update_days == 'thu', 4),
+            (Webtoon.update_days == 'fri', 5),
+            (Webtoon.update_days == 'sat', 6),
+            (Webtoon.update_days == 'sun', 7),
+            (Webtoon.update_days == 'finished', 8),
+            (Webtoon.update_days == 'naverDaily', 9)
+        )
+        ```
     
    ![](https://velog.velcdn.com/images/summereuna/post/0272d96f-cabc-483a-85f8-45cf6e964c9b/image.png)
-   - DB에 저장된 웹툰 서비스, 연재일 **변수를 if else if 문을 통해 한글로 변환**
-     - (방법 1) jinja2로 구현
+   - 웹툰 서비스, 연재일 값을 조건부로 한국어로 변경
+   - (예시) 연재일 값 변경 코드
+     - (방법 1) jinja2로 구현: if elif else 문
         ```html
             <span id="updateDay" class="badge text-bg-dark ms-1">
                                     {% if webtoon.update_days == "mon" %} 월 {% elif
@@ -146,7 +163,7 @@
                                   </span>
         ```
             
-     - (방법 2) JavaScript로 구현
+     - (방법 2) JavaScript로 구현: switch 문 
         ```js
             <script>
                   function getDayKorean(updateDays) {
